@@ -621,14 +621,16 @@ class KO7_Text {
 	 * Multiple values can be returned at once by using an array:
 	 *
 	 *     // Get the browser and platform with a single call
-	 *     $info = Text::user_agent($agent, array('browser', 'platform'));
+	 *     $info = Text::user_agent($agent, ['browser', 'platform']);
 	 *
 	 * When using an array for the value, an associative array will be returned.
 	 *
-	 * @param   string  $agent  user_agent
-	 * @param   mixed   $value  array or string to return: browser, version, robot, mobile, platform
-	 * @return  mixed   requested information, FALSE if nothing is found
 	 * @uses    KO7::$config
+	 *
+	 * @param   string  $agent  user_agent
+	 * @param   array|string   $value  array or string to return: browser, version, robot, mobile, platform
+	 *
+	 * @return  array<string, mixed>|string|false   requested information, FALSE if nothing is found
 	 */
 	public static function user_agent($agent, $value)
 	{

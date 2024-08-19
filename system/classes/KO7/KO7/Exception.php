@@ -12,7 +12,7 @@
 class KO7_KO7_Exception extends Exception {
 
     /**
-     * @var  array  PHP error code => human readable name
+     * @var  array<int, string>  PHP error code => human readable name
      */
     public static $php_errors = [
         E_ERROR              => 'Fatal Error',
@@ -46,6 +46,7 @@ class KO7_KO7_Exception extends Exception {
      * @param   array           $variables  translation variables
      * @param   integer|string  $code       the exception code
      * @param   Throwable       $previous   Previous throwable
+     *
      * @return  void
      */
     public function __construct($message = "", array $variables = NULL, $code = 0, Throwable $previous = NULL)

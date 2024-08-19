@@ -63,6 +63,7 @@ abstract class KO7_Controller {
 	 * will be called.
 	 *
 	 * @throws  HTTP_Exception_404
+	 *
 	 * @return  Response
 	 */
 	public function execute()
@@ -122,6 +123,9 @@ abstract class KO7_Controller {
 	 *
 	 * @param  string  $uri   URI to redirect to
 	 * @param  int     $code  HTTP Status code to use for the redirect
+	 *
+	 	 * @return void
+	 	 *
 	 * @throws HTTP_Exception
 	 */
 	public static function redirect($uri = '', $code = 302)
@@ -137,6 +141,7 @@ abstract class KO7_Controller {
 	 *     $this->check_cache(sha1($content));
 	 *
 	 * @param  string  $etag  Resource Etag
+	 *
 	 * @return Response
 	 */
 	protected function check_cache($etag = NULL)

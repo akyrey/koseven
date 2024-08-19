@@ -20,7 +20,7 @@ class KO7_Config_Group extends ArrayObject {
 	/**
 	 * Reference the config object that created this group
 	 * Used when updating config
-	 * @var KO7_Config
+	 * @var KO7_Config|null
 	 */
 	protected $_parent_instance = NULL;
 
@@ -35,9 +35,11 @@ class KO7_Config_Group extends ArrayObject {
 	 * Constructs the group object.  KO7_Config passes the config group
 	 * and its config items to the object here.
 	 *
-	 * @param KO7_Config  $instance "Owning" instance of KO7_Config
-	 * @param string         $group    The group name
-	 * @param array          $config   Group's config
+	 * @param KO7_Config $instance "Owning" instance of KO7_Config
+	 * @param string     $group    The group name
+	 * @param array      $config   Group's config
+   *
+   * @return void
 	 */
 	public function __construct(KO7_Config $instance, $group, array $config = [])
 	{

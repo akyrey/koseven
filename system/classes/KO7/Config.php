@@ -18,10 +18,10 @@
  */
 class KO7_Config {
 
-	// Configuration readers
+	/** @var array<array-key, Config_Source> $_sources Configuration readers */
 	protected $_sources = [];
 
-	// Array of config groups
+	/** @var array<string, Config_Group> $_groups Array of config groups */
 	protected $_groups = [];
 
 	/**
@@ -33,8 +33,9 @@ class KO7_Config {
 	 *     $config->attach($reader, FALSE); // Try last
 	 *
 	 * @param   KO7_Config_Source    $source instance
-	 * @param   boolean                 $first  add the reader as the first used object
-	 * @return  $this
+	 * @param   boolean              $first  add the reader as the first used object
+	 *
+	 * @return  static
 	 */
 	public function attach(KO7_Config_Source $source, $first = TRUE)
 	{
@@ -61,7 +62,8 @@ class KO7_Config {
 	 *     $config->detach($reader);
 	 *
 	 * @param   KO7_Config_Source    $source instance
-	 * @return  $this
+	 *
+	 * @return  static
 	 */
 	public function detach(KO7_Config_Source $source)
 	{
@@ -84,7 +86,9 @@ class KO7_Config {
 	 * See [KO7_Config_Group] for more info
 	 *
 	 * @param   string  $group  configuration group name
-	 * @return  KO7_Config_Group
+	 *
+	 * @return  Config_Group|stdClass|null
+	 *
 	 * @throws  KO7_Exception
 	 */
 	public function load($group)
@@ -151,7 +155,8 @@ class KO7_Config {
 	 *     $config->copy($name);
 	 *
 	 * @param   string  $group  configuration group name
-	 * @return  $this
+	 *
+	 * @return  static
 	 */
 	public function copy($group)
 	{
@@ -172,7 +177,8 @@ class KO7_Config {
 	 * @param string    $group  Group name
 	 * @param string    $key    Variable name
 	 * @param mixed     $value  The new value
-	 * @return KO7_Config Chainable instance
+	 *
+	 * @return static Chainable instance
 	 */
 	public function _write_config($group, $key, $value)
 	{

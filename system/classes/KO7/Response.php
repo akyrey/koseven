@@ -24,15 +24,16 @@ class KO7_Response implements HTTP_Response {
 	 *      // Create a new response with headers
 	 *      $response = Response::factory(array('status' => 200));
 	 *
-	 * @param   array    $config Setup the response object
-	 * @return  Response
+	 * @param   array{_status?: int, _header?: string, _body?: mixed, _cookies?: array, _protocol?: string} $config Setup the response object
+	 *
+	 * @return  static
 	 */
 	public static function factory(array $config = [])
 	{
 		return new Response($config);
 	}
 
-	// HTTP status codes and messages
+	/** @var array<int, string> $messages HTTP status codes and messages */
 	public static $messages = [
 		// Informational 1xx
 		100 => 'Continue',
@@ -120,7 +121,7 @@ class KO7_Response implements HTTP_Response {
 	protected $_header;
 
 	/**
-	 * @var  string      The response body
+	 * @var  mixed      The response body
 	 */
 	protected $_body = '';
 
@@ -137,7 +138,8 @@ class KO7_Response implements HTTP_Response {
 	/**
 	 * Sets up the response object
 	 *
-	 * @param   array $config Setup the response object
+	 * @param   array{_status?: int, _header?: string, _body?: mixed, _cookies?: array, _protocol?: string} $config Setup the response object
+	 *
 	 * @return  void
 	 */
 	public function __construct(array $config = [])
@@ -172,10 +174,10 @@ class KO7_Response implements HTTP_Response {
 
 	/**
 	 * Gets or sets the body of the response
-     *
-     * @param mixed $content   Content of body
 	 *
-	 * @return  mixed
+	 * @param mixed $content   Content of body
+	 *
+	 * @return  mixed|static
 	 */
 	public function body($content = NULL)
 	{
@@ -200,7 +202,8 @@ class KO7_Response implements HTTP_Response {
 	 * is `HTTP/1.1`.
 	 *
 	 * @param   string   $protocol Protocol to set to the request/response
-	 * @return  mixed
+	 *
+	 * @return  mixed|static
 	 */
 	public function protocol($protocol = NULL)
 	{
@@ -228,9 +231,9 @@ class KO7_Response implements HTTP_Response {
 	 *      // Get the current status
 	 *      $status = $response->status();
 	 *
-	 * @param   integer  $status Status to set to this response
+	 * @param   integer|null  $status Status to set to this response
 	 *
-	 * @return  KO7_Response|int|boolean	acting as setter \ acting as getter \ false on invalid status code
+	 * @return  KO7_Response|int|boolean acting as setter \ acting as getter \ false on invalid status code
 	 */
 	public function status($status = NULL)
 	{
@@ -263,9 +266,10 @@ class KO7_Response implements HTTP_Response {
 	 *       // Set multiple headers
 	 *       $response->headers(array('Content-Type' => 'text/html', 'Cache-Control' => 'no-cache'));
 	 *
-	 * @param mixed $key
-	 * @param string $value
-	 * @return mixed
+	 * @param string|string[]|null $key
+	 * @param string|null $value
+	 *
+	 * @return HTTP_Header|static|T|null
 	 */
 	public function headers($key = NULL, $value = NULL)
 	{

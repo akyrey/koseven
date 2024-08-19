@@ -13,7 +13,7 @@
 class KO7_HTML {
 
 	/**
-	 * @var  array  preferred order of attributes
+	 * @var  string[]  preferred order of attributes
 	 */
 	public static $attribute_order = [
 		'action',
@@ -80,6 +80,7 @@ class KO7_HTML {
 	 *
 	 * @param   string  $value          string to convert
 	 * @param   boolean $double_encode  encode existing entities
+	 *
 	 * @return  string
 	 */
 	public static function entities($value, $double_encode = TRUE)
@@ -93,15 +94,17 @@ class KO7_HTML {
 	 *
 	 *     echo HTML::anchor('/user/profile', 'My Profile');
 	 *
-	 * @param   string  $uri        URL or URI string
-	 * @param   string  $title      link text
-	 * @param   array   $attributes HTML anchor attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
 	 * @uses    URL::base
 	 * @uses    URL::site
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                     $uri        URL or URI string
+	 * @param   string|null                $title      link text
+	 * @param   array<string, string>|null $attributes HTML anchor attributes
+	 * @param   Request|string|bool        $protocol   protocol to pass to URL::base()
+	 * @param   boolean                    $index      include the index page
+	 *
+	 * @return  string
 	 */
 	public static function anchor($uri, $title = NULL, array $attributes = NULL, $protocol = NULL, $index = TRUE)
 	{
@@ -145,14 +148,16 @@ class KO7_HTML {
 	 *
 	 *     echo HTML::file_anchor('media/doc/user_guide.pdf', 'User Guide');
 	 *
-	 * @param   string  $file       name of file to link to
-	 * @param   string  $title      link text
-	 * @param   array   $attributes HTML anchor attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
 	 * @uses    URL::base
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                     $file       name of file to link to
+	 * @param   string|null                $title      link text
+	 * @param   array<string, string>|null $attributes HTML anchor attributes
+	 * @param   Request|string|bool        $protocol   protocol to pass to URL::base()
+	 * @param   boolean                    $index      include the index page
+	 *
+	 * @return  string
 	 */
 	public static function file_anchor($file, $title = NULL, array $attributes = NULL, $protocol = NULL, $index = FALSE)
 	{
@@ -174,11 +179,13 @@ class KO7_HTML {
 	 *
 	 *     echo HTML::mailto($address);
 	 *
-	 * @param   string  $email      email address to send to
-	 * @param   string  $title      link text
-	 * @param   array   $attributes HTML anchor attributes
-	 * @return  string
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                $email      email address to send to
+	 * @param   string|null           $title      link text
+	 * @param   array<string, string> $attributes HTML anchor attributes
+	 *
+	 * @return  string
 	 */
 	public static function mailto($email, $title = NULL, array $attributes = NULL)
 	{
@@ -196,13 +203,15 @@ class KO7_HTML {
 	 *
 	 *     echo HTML::style('media/css/screen.css');
 	 *
-	 * @param   string  $file       file name
-	 * @param   array   $attributes default attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
 	 * @uses    URL::base
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                     $file       file name
+	 * @param   array<string, string>|null $attributes default attributes
+	 * @param   Request|string|bool        $protocol   protocol to pass to URL::base()
+	 * @param   boolean                    $index      include the index page
+	 *
+	 * @return  string
 	 */
 	public static function style($file, array $attributes = NULL, $protocol = NULL, $index = FALSE)
 	{
@@ -229,13 +238,15 @@ class KO7_HTML {
 	 *
 	 *     echo HTML::script('media/js/jquery.min.js');
 	 *
-	 * @param   string  $file       file name
-	 * @param   array   $attributes default attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
 	 * @uses    URL::base
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                     $file       file name
+	 * @param   array<string, string>|null $attributes default attributes
+	 * @param   Request|string|bool        $protocol   protocol to pass to URL::base()
+	 * @param   boolean                    $index      include the index page
+	 *
+	 * @return  string
 	 */
 	public static function script($file, array $attributes = NULL, $protocol = NULL, $index = FALSE)
 	{
@@ -259,13 +270,15 @@ class KO7_HTML {
 	 *
 	 *     echo HTML::image('media/img/logo.png', array('alt' => 'My Company'));
 	 *
-	 * @param   string  $file       file name
-	 * @param   array   $attributes default attributes
-	 * @param   mixed   $protocol   protocol to pass to URL::base()
-	 * @param   boolean $index      include the index page
-	 * @return  string
 	 * @uses    URL::base
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                     $file       file name
+	 * @param   array<string, string>|null $attributes default attributes
+	 * @param   Request|string|bool        $protocol   protocol to pass to URL::base()
+	 * @param   boolean                    $index      include the index page
+	 *
+	 * @return  string
 	 */
 	public static function image($file, array $attributes = NULL, $protocol = NULL, $index = FALSE)
 	{
@@ -287,7 +300,8 @@ class KO7_HTML {
 	 *
 	 *     echo '<div'.HTML::attributes($attrs).'>'.$content.'</div>';
 	 *
-	 * @param   array   $attributes attribute list
+	 * @param   array<string, string>|null $attributes attribute list
+	 *
 	 * @return  string
 	 */
 	public static function attributes(array $attributes = NULL)
@@ -341,23 +355,25 @@ class KO7_HTML {
 
 		return $compiled;
 	}
-	
+
 	/**
 	 * Creates an HTML tag element.
 	 *
 	 *     echo HTML::tag('div', 'Hello world');
 	 *
-	 * @param   string  $type       HTML element
-	 * @param   string  $content    content of the HTML element
-	 * @param   array   $attributes default attributes
-	 * @return  string
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                     $type       HTML element
+	 * @param   string|null                $content    content of the HTML element
+	 * @param   array<string, string>|null $attributes default attributes
+	 *
+	 * @return  string
 	 */
 	public static function tag($type, $content = NULL, array $attributes = NULL): string
 	{
 		if ( ! is_array($attributes))
 			$attributes = [];
-		
+
 		return '<'.$type.' '.self::attributes($attributes).'>'.$content.'</'.$type.'>';
 	}
 }

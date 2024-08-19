@@ -12,7 +12,7 @@
 class KO7_Cookie {
 
 	/**
-	 * @var  string  Magic salt to add to the cookie
+	 * @var  string|null  Magic salt to add to the cookie
 	 */
 	public static $salt = NULL;
 
@@ -27,7 +27,7 @@ class KO7_Cookie {
 	public static $path = '/';
 
 	/**
-	 * @var  string  Restrict the domain that the cookie is available to
+	 * @var  string|null  Restrict the domain that the cookie is available to
 	 */
 	public static $domain = NULL;
 
@@ -49,9 +49,12 @@ class KO7_Cookie {
 	 *     // Get the "theme" cookie, or use "blue" if the cookie does not exist
 	 *     $theme = Cookie::get('theme', 'blue');
 	 *
-	 * @param   string  $key        cookie name
-	 * @param   mixed   $default    default value to return
-	 * @return  string
+	 * @template TDefault
+	 *
+	 * @param   string        $key        cookie name
+	 * @param   TDefault|null $default    default value to return
+	 *
+	 * @return  string|TDefault|null
 	 */
 	public static function get($key, $default = NULL)
 	{
@@ -97,11 +100,13 @@ class KO7_Cookie {
 	 *     // Set the "theme" cookie
 	 *     Cookie::set('theme', 'red');
 	 *
-	 * @param   string  $name       name of cookie
-	 * @param   string  $value      value of cookie
-	 * @param   integer $lifetime   lifetime in seconds
-	 * @return  boolean
 	 * @uses    Cookie::salt
+	 *
+	 * @param   string       $name       name of cookie
+	 * @param   string       $value      value of cookie
+	 * @param   integer|null $lifetime   lifetime in seconds
+	 *
+	 * @return  boolean
 	 */
 	public static function set($name, $value, $lifetime = NULL)
 	{
@@ -129,6 +134,7 @@ class KO7_Cookie {
 	 *     Cookie::delete('theme');
 	 *
 	 * @param   string  $name   cookie name
+	 *
 	 * @return  boolean
 	 */
 	public static function delete($name)
@@ -145,10 +151,11 @@ class KO7_Cookie {
 	 *
 	 *     $salt = Cookie::salt('theme', 'red');
 	 *
-	 * @param   string $name name of cookie
-	 * @param   string $value value of cookie
+	 * @param   string      $name name of cookie
+	 * @param   string|null $value value of cookie
 	 *
 	 * @throws KO7_Exception if Cookie::$salt is not configured
+	 *
 	 * @return  string
 	 */
 	public static function salt($name, $value)
@@ -166,16 +173,17 @@ class KO7_Cookie {
 	 * Proxy for the native setcookie function - to allow mocking in unit tests so that they do not fail when headers
 	 * have been sent.
 	 *
-	 * @param string  $name
-	 * @param string  $value
-	 * @param integer $expire
-	 * @param string  $path
-	 * @param string  $domain
-	 * @param boolean $secure
-	 * @param boolean $httponly
+	 * @see setcookie
+	 *
+	 * @param string       $name
+	 * @param string|null  $value
+	 * @param integer|null $expire
+	 * @param string|null  $path
+	 * @param string|null  $domain
+	 * @param boolean|null $secure
+	 * @param boolean|null $httponly
 	 *
 	 * @return bool
-	 * @see setcookie
 	 */
 	protected static function _setcookie($name, $value, $expire, $path, $domain, $secure, $httponly)
 	{
@@ -185,8 +193,9 @@ class KO7_Cookie {
 	/**
 	 * Proxy for the native time function - to allow mocking of time-related logic in unit tests
 	 *
-	 * @return int
 	 * @see    time
+	 *
+	 * @return int
 	 */
 	protected static function _time()
 	{

@@ -12,35 +12,38 @@
  * @license    https://koseven.dev/LICENSE
  */
 class KO7_URL {
-
-	/**
-	 * Gets the base URL to the application.
-	 * To specify a protocol, provide the protocol as a string or request object.
-	 * If a protocol is used, a complete URL will be generated using the
-	 * `$_SERVER['HTTP_HOST']` variable, which will be validated against RFC 952
-	 * and RFC 2181, as well as against the list of trusted hosts you have set
-	 * in the `url.php` config file.
-	 *
-	 *     // Absolute URL path with no host or protocol
-	 *     echo URL::base();
-	 *
-	 *     // Absolute URL path with host, https protocol and index.php if set
-	 *     echo URL::base('https', TRUE);
-	 *
-	 *     // Absolute URL path with host, https protocol and subdomain part
-	 *     // prepended or replaced with given value
-	 *     echo URL::base('https', FALSE, 'subdomain');
-	 *
-	 *     // Absolute URL path with host and protocol from $request
-	 *     echo URL::base($request);
-	 *
-	 * @param   mixed    $protocol  Protocol string, [Request], or boolean
-	 * @param   boolean  $index     Add index file to URL?
-	 * @param   string   $subdomain Subdomain string
-	 * @return  string
-	 * @uses    KO7::$index_file
-	 * @uses    Request::protocol()
-	 */
+    /**
+     * Gets the base URL to the application.
+     * To specify a protocol, provide the protocol as a string or request object.
+     * If a protocol is used, a complete URL will be generated using the
+     * `$_SERVER['HTTP_HOST']` variable, which will be validated against RFC 952
+     * and RFC 2181, as well as against the list of trusted hosts you have set
+     * in the `url.php` config file.
+     *
+     *     // Absolute URL path with no host or protocol
+     *     echo URL::base();
+     *
+     *     // Absolute URL path with host, https protocol and index.php if set
+     *     echo URL::base('https', TRUE);
+     *
+     *     // Absolute URL path with host, https protocol and subdomain part
+     *     // prepended or replaced with given value
+     *     echo URL::base('https', FALSE, 'subdomain');
+     *
+     *     // Absolute URL path with host and protocol from $request
+     *     echo URL::base($request);
+     * @param string|Request|bool|null $protocol  Protocol string, [Request], or boolean
+     * @param bool                     $index     Add index file to URL?
+     * @param string|null              $subdomain Subdomain string
+     *
+     * @return string Base application URL
+     *
+     * @throws KO7_Exception
+     *
+     * @uses KO7::$index_file
+     * @uses Request::protocol()
+     *
+     */
 	public static function base($protocol = NULL, $index = FALSE, $subdomain = NULL)
 	{
 		// Start with the configured base URL
@@ -138,18 +141,22 @@ class KO7_URL {
 		return $base_url;
 	}
 
-	/**
-	 * Fetches an absolute site URL based on a URI segment.
-	 *
-	 *     echo URL::site('foo/bar');
-	 *
-	 * @param   string  $uri        Site URI to convert
-	 * @param   mixed   $protocol   Protocol string or [Request] class to use protocol from
-	 * @param   boolean $index		Include the index_page in the URL
-	 * @param   string  $subdomain  Subdomain string
-	 * @return  string
-	 * @uses    URL::base
-	 */
+    /**
+     * Fetches an absolute site URL based on a URI segment.
+     *
+     *     echo URL::site('foo/bar');
+     *
+     * @param string                   $uri Site URI to convert
+     * @param string|Request|bool|null $protocol Protocol string or [Request] class to use protocol from
+     * @param bool                     $index Include the index_page in the URL
+     * @param string|null              $subdomain Subdomain string
+     *
+     * @return string absolute URL
+     *
+     * @throws KO7_Exception
+     *
+     * @uses URL::base
+     */
 	public static function site($uri = '', $protocol = NULL, $index = TRUE, $subdomain = NULL)
 	{
 		// Chop off possible scheme, host, port, user and pass parts
@@ -165,34 +172,36 @@ class KO7_URL {
 		return URL::base($protocol, $index, $subdomain).$path;
 	}
 
-	/**
-	 * Callback used for encoding all non-ASCII characters, as per RFC 1738
-	 * Used by URL::site()
-	 *
-	 * @param  array $matches  Array of matches from preg_replace_callback()
-	 * @return string          Encoded string
-	 */
+    /**
+     * Callback used for encoding all non-ASCII characters, as per RFC 1738
+     * Used by URL::site()
+     *
+     * @param string[] $matches Array of matches from preg_replace_callback()
+     *
+     * @return string Encoded string
+     */
 	protected static function _rawurlencode_callback($matches)
 	{
 		return rawurlencode($matches[0]);
 	}
 
-	/**
-	 * Merges the current GET parameters with an array of new or overloaded
-	 * parameters and returns the resulting query string.
-	 *
-	 *     // Returns "?sort=title&limit=10" combined with any existing GET values
-	 *     $query = URL::query(array('sort' => 'title', 'limit' => 10));
-	 *
-	 * Typically you would use this when you are sorting query results,
-	 * or something similar.
-	 *
-	 * [!!] Parameters with a NULL value are left out.
-	 *
-	 * @param   array    $params   Array of GET parameters
-	 * @param   boolean  $use_get  Include current request GET parameters
-	 * @return  string
-	 */
+    /**
+     * Merges the current GET parameters with an array of new or overloaded
+     * parameters and returns the resulting query string.
+     *
+     *     // Returns "?sort=title&limit=10" combined with any existing GET values
+     *     $query = URL::query(['sort' => 'title', 'limit' => 10]);
+     *
+     * Typically you would use this when you are sorting query results,
+     * or something similar.
+     *
+     * [!!] Parameters with a NULL value are left out.
+     *
+     * @param array<string, mixed>|null $params  Array of GET parameters
+     * @param bool                      $use_get Include current request GET parameters
+     *
+     * @return string Query string
+     */
 	public static function query(array $params = NULL, $use_get = TRUE)
 	{
 		if ($use_get)
@@ -222,17 +231,19 @@ class KO7_URL {
 		return ($query === '') ? '' : ('?'.$query);
 	}
 
-	/**
-	 * Convert a phrase to a URL-safe title.
-	 *
-	 *     echo URL::title('My Blog Post'); // "my-blog-post"
-	 *
-	 * @param   string   $title       Phrase to convert
-	 * @param   string   $separator   Word separator (any single character)
-	 * @param   boolean  $ascii_only  Transliterate to ASCII?
-	 * @return  string
-	 * @uses    UTF8::transliterate_to_ascii
-	 */
+    /**
+     * Convert a phrase to a URL-safe title.
+     *
+     *     echo URL::title('My Blog Post'); // "my-blog-post"
+     *
+     * @param string $title      Phrase to convert
+     * @param string $separator  Word separator (any single character)
+     * @param bool   $ascii_only Transliterate to ASCII?
+     *
+     * @return string URL-safe title
+     *
+     * @uses UTF8::transliterate_to_ascii
+     */
 	public static function title($title, $separator = '-', $ascii_only = FALSE)
 	{
 		if ($ascii_only)
@@ -263,19 +274,21 @@ class KO7_URL {
 		return trim($title, $separator);
 	}
 
-	/**
-	 * Test if given $host should be trusted.
-	 *
-	 * Tests against given $trusted_hosts
-	 * or looks for key `trusted_hosts` in `url` config
-	 *
-	 * @param string $host
-	 * @param array $trusted_hosts
-	 * @return boolean TRUE if $host is trustworthy
-	 */
+    /**
+     * Test if given $host should be trusted.
+     *
+     * Tests against given $trusted_hosts
+     * or looks for key `trusted_hosts` in `url` config
+     *
+     * @param string        $host
+     * @param string[]|null $trusted_hosts
+     *
+     * @return boolean TRUE if $host is trustworthy
+     *
+     * @throws KO7_Exception
+     */
 	public static function is_trusted_host($host, array $trusted_hosts = NULL)
 	{
-
 		// If list of trusted hosts is not directly provided read from config
 		if (empty($trusted_hosts))
 		{
@@ -298,6 +311,5 @@ class KO7_URL {
 
 		// return FALSE as nothing is matched
 		return FALSE;
-
 	}
 }

@@ -71,7 +71,7 @@ class KO7_Route {
 	public static $cache = FALSE;
 
 	/**
-	 * @var  array
+	 * @var  array<string, static>
 	 */
 	protected static $_routes = [];
 
@@ -119,7 +119,7 @@ class KO7_Route {
 	 *
 	 *     $routes = Route::all();
 	 *
-	 * @return  array  routes by name
+	 * @return  array<string, static>  routes by name
 	 */
 	public static function all()
 	{
@@ -413,8 +413,8 @@ class KO7_Route {
 	 *     }
 	 *
 	 * @param   Request $request  Request object to match
-	 * @return  array             on success
-	 * @return  FALSE             on failure
+	 *
+	 * @return  array<string, mixed>|FALSE array on success, FALSE on failure
 	 */
 	public function matches(Request $request)
 	{

@@ -88,12 +88,14 @@ abstract class KO7_Request_Client {
 	 *
 	 *     $request->execute();
 	 *
-	 * @param   Request   $request
-	 * @param   Response  $response
-	 * @return  Response
-	 * @throws  KO7_Exception
 	 * @uses    [KO7::$profiling]
 	 * @uses    [Profiler]
+	 *
+	 * @param   Request   $request
+	 *
+	 * @return  Response
+	 *
+	 * @throws  KO7_Exception
 	 */
 	public function execute(Request $request)
 	{

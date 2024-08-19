@@ -18,7 +18,7 @@ class KO7_Num {
 	const ROUND_HALF_ODD	= 4;
 
 	/**
-	 * @var  array  Valid byte units => power of 2 that defines the unit's size
+	 * @var  array<string, int>  Valid byte units => power of 2 that defines the unit's size
 	 */
 	public static $byte_units = [
 		'B'   => 0,
@@ -64,6 +64,7 @@ class KO7_Num {
 	 *     echo 33, Num::ordinal(33); // "33rd"
 	 *
 	 * @param   integer $number
+	 *
 	 * @return  string
 	 */
 	public static function ordinal($number)
@@ -99,11 +100,13 @@ class KO7_Num {
 	 *     // In Portuguese, "1.200.05"
 	 *     echo Num::format(1200.05, 2, TRUE);
 	 *
+	 * @since   3.0.2
+	 *
 	 * @param   float   $number     number to format
 	 * @param   integer $places     decimal places
 	 * @param   boolean $monetary   monetary formatting?
+	 *
 	 * @return  string
-	 * @since   3.0.2
 	 */
 	public static function format($number, $places, $monetary = FALSE)
 	{
@@ -130,6 +133,7 @@ class KO7_Num {
 	 * @param integer $precision Desired precision
 	 * @param integer $mode Tie breaking mode, accepts the PHP_ROUND_HALF_* constants
 	 * @param boolean $native Set to false to force use of the userland implementation
+	 *
 	 * @return float Rounded number
 	 */
 	public static function round($value, $precision = 0, $mode = self::ROUND_HALF_UP, $native = TRUE)
@@ -200,6 +204,7 @@ class KO7_Num {
 	 *     echo Num::bytes('2.5GB'); // 2684354560
 	 *
 	 * @param   string  $bytes  file size in SB format
+	 *
 	 * @return  float
 	 */
 	public static function bytes($size)

@@ -20,10 +20,12 @@ class KO7_HTTP_Header extends ArrayObject {
 
 	/**
 	 * Parses an Accept(-*) header and detects the quality
-	 *
-	 * @param   array   $parts  accept header parts
-	 * @return  array
+   *
 	 * @since   3.2.0
+	 *
+	 * @param   array<string, string>   $parts  accept header parts
+   *
+	 * @return  array<string, float>
 	 */
 	public static function accept_quality(array $parts)
 	{
@@ -64,9 +66,11 @@ class KO7_HTTP_Header extends ArrayObject {
 	 * for each supplied accept type.
 	 *
 	 * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
-	 * @param   string  $accepts    accept content header string to parse
-	 * @return  array
-	 * @since   3.2.0
+   * @since   3.2.0
+   *
+	 * @param   string|null  $accepts    accept content header string to parse
+   *
+	 * @return  array<string, array<string, float>>
 	 */
 	public static function parse_accept_header($accepts = NULL)
 	{
@@ -104,9 +108,11 @@ class KO7_HTTP_Header extends ArrayObject {
 	 * the charset and associated quality.
 	 *
 	 * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.2
-	 * @param   string  $charset    charset string to parse
-	 * @return  array
-	 * @since   3.2.0
+   * @since   3.2.0
+   *
+	 * @param   string|null  $charset    charset string to parse
+   *
+	 * @return  array<string, float>
 	 */
 	public static function parse_charset_header($charset = NULL)
 	{
@@ -123,9 +129,11 @@ class KO7_HTTP_Header extends ArrayObject {
 	 * the charsets and associated quality.
 	 *
 	 * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3
-	 * @param   string  $encoding   charset string to parse
-	 * @return  array
-	 * @since   3.2.0
+   * @since   3.2.0
+   *
+	 * @param   string|null  $encoding   charset string to parse
+   *
+	 * @return  array<string, float>
 	 */
 	public static function parse_encoding_header($encoding = NULL)
 	{
@@ -149,9 +157,11 @@ class KO7_HTTP_Header extends ArrayObject {
 	 * the languages and associated quality.
 	 *
 	 * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4
-	 * @param   string  $language   charset string to parse
-	 * @return  array
-	 * @since   3.2.0
+   * @since   3.2.0
+   *
+	 * @param   string|null  $language   charset string to parse
+   *
+	 * @return  array<string, float>
 	 */
 	public static function parse_language_header($language = NULL)
 	{
@@ -200,7 +210,9 @@ class KO7_HTTP_Header extends ArrayObject {
 	 *     $response->headers('Cache-Control', HTTP_Header::create_cache_control($cache_control);
 	 *
 	 * @link    http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13
-	 * @param   array   $cache_control  Cache-Control to render to string
+   *
+	 * @param   array<string|int, string>   $cache_control  Cache-Control to render to string
+   *
 	 * @return  string
 	 */
 	public static function create_cache_control(array $cache_control)
@@ -229,8 +241,9 @@ class KO7_HTTP_Header extends ArrayObject {
 	 *          $maxage = $cache_control['max-age'];
 	 *     }
 	 *
-	 * @param   array   $cache_control Array of headers
-	 * @return  mixed
+	 * @param   string   $cache_control headers separated by a comma
+   *
+	 * @return  array<string|int, string|int>|false
 	 */
 	public static function parse_cache_control($cache_control)
 	{
@@ -289,9 +302,11 @@ class KO7_HTTP_Header extends ArrayObject {
 	 *
 	 *     $header_object = new HTTP_Header(array('x-powered-by' => 'KO7 3.1.x', 'expires' => '...'));
 	 *
-	 * @param   mixed   $input          Input array
-	 * @param   int     $flags          Flags
-	 * @param   string  $iterator_class The iterator class to use
+	 * @param   array<string, string> $input          Input array
+	 * @param   int                   $flags          Flags
+	 * @param   string                $iterator_class The iterator class to use
+   *
+   * @return void
 	 */
 	public function __construct(array $input = [], $flags = 0, $iterator_class = 'ArrayIterator')
 	{
@@ -341,12 +356,14 @@ class KO7_HTTP_Header extends ArrayObject {
 	 * with multiple instances of the same directive. If the `$replace` flag
 	 * is `FALSE`, the header will be appended rather than replacing the
 	 * original setting.
+   *
+	 * @since   3.2.0
 	 *
 	 * @param   mixed   $index      index to set `$newval` to
 	 * @param   mixed   $newval     new value to set
 	 * @param   boolean $replace    replace existing value
+   *
 	 * @return  void
-	 * @since   3.2.0
 	 */
 	public function offsetSet(mixed $index, mixed $newval, bool $replace = TRUE): void
 	{

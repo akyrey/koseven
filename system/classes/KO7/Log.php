@@ -29,7 +29,7 @@ class KO7_Log {
 	public static $write_on_add = FALSE;
 
 	/**
-	 * @var  Log  Singleton instance container
+	 * @var  static  Singleton instance container
 	 */
 	protected static $_instance;
 
@@ -38,7 +38,7 @@ class KO7_Log {
 	 *
 	 *     $log = Log::instance();
 	 *
-	 * @return  Log
+	 * @return  static
 	 */
 	public static function instance()
 	{
@@ -55,12 +55,12 @@ class KO7_Log {
 	}
 
 	/**
-	 * @var  array  list of added messages
+	 * @var  array<array-key, array{time: int, level: int, body: string, trace: array, file: string|null, line: int|null, class: string|null, function: string|null, additional: array}>  list of added messages
 	 */
 	protected $_messages = [];
 
 	/**
-	 * @var  array  list of log writers
+	 * @var  array<string, array{object: Log_Writer, levels: int[]}>  list of log writers
 	 */
 	protected $_writers = [];
 
@@ -71,9 +71,10 @@ class KO7_Log {
 	 *     $log->attach($writer);
 	 *
 	 * @param   Log_Writer  $writer     instance
-	 * @param   mixed       $levels     array of messages levels to write OR max level to write
+	 * @param   int[]|int   $levels     array of messages levels to write OR max level to write
 	 * @param   integer     $min_level  min level to write IF $levels is not an array
-	 * @return  Log
+	 *
+	 * @return  static
 	 */
 	public function attach(Log_Writer $writer, $levels = [], $min_level = 0)
 	{
@@ -96,7 +97,8 @@ class KO7_Log {
 	 *     $log->detach($writer);
 	 *
 	 * @param   Log_Writer  $writer instance
-	 * @return  Log
+	 *
+	 * @return  static
 	 */
 	public function detach(Log_Writer $writer)
 	{
@@ -114,11 +116,12 @@ class KO7_Log {
 	 *         ':user' => $username,
 	 *     ));
 	 *
-	 * @param   string  $level       level of message
-	 * @param   string  $message     message body
-	 * @param   array   $values      values to replace in the message
-	 * @param   array   $additional  additional custom parameters to supply to the log writer
-	 * @return  Log
+	 * @param   int        $level       level of message
+	 * @param   string     $message     message body
+	 * @param   array|null $values      values to replace in the message
+	 * @param   array|null $additional  additional custom parameters to supply to the log writer
+	 *
+	 * @return  static
 	 */
 	public function add($level, $message, array $values = NULL, array $additional = NULL)
 	{

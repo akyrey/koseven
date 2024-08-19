@@ -39,6 +39,7 @@ abstract class KO7_HTTP {
 			throw new HTTP_Exception('Invalid redirect code \':code\'', [':code' => $code]);
 		}
 
+		/** @var HTTP_Exception_Redirect $e */
 		$e = HTTP_Exception::factory($code);
 
 		throw $e->location($uri);
@@ -53,10 +54,10 @@ abstract class KO7_HTTP {
 	 * @param Response $response Response
 	 * @param string   $etag     Resource ETag
 	 *
+	 * @return Response
+	 *
 	 * @throws Request_Exception
 	 * @throws HTTP_Exception_304
-	 *
-	 * @return Response
 	 */
 	public static function check_cache(Request $request, Response $response, $etag = NULL)
 	{
@@ -207,7 +208,7 @@ abstract class KO7_HTTP {
 	 * Processes an array of key value pairs and encodes
 	 * the values to meet RFC 3986
 	 *
-	 * @param array $params Params
+	 * @param array<string, string> $params Params
 	 *
 	 * @return  string
 	 */

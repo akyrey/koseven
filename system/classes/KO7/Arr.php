@@ -26,6 +26,7 @@ class KO7_Arr {
 	 *     Arr::is_assoc('foo', 'bar');
 	 *
 	 * @param   array   $array  array to check
+	 *
 	 * @return  boolean
 	 */
 	public static function is_assoc(array $array)
@@ -51,6 +52,7 @@ class KO7_Arr {
 	 *     Arr::is_array(Database::instance());
 	 *
 	 * @param   mixed   $value  value to check
+	 *
 	 * @return  boolean
 	 */
 	public static function is_array($value)
@@ -81,11 +83,16 @@ class KO7_Arr {
 	 *     // Using an array of keys
 	 *     $colors = Arr::path($array, array('theme', '*', 'color'));
 	 *
-	 * @param   array   $array      array to search
-	 * @param   mixed   $path       key path string (delimiter separated) or array of keys
-	 * @param   mixed   $default    default value if the path is not set
-	 * @param   string  $delimiter  key path delimiter
-	 * @return  mixed
+	 * @template TKey
+	 * @template TValue
+	 * @template TDefault
+	 *
+	 * @param   iterable<TKey, TValue>          $array      array to search
+	 * @param   string|array                    $path       key path string (delimiter separated) or array of keys
+	 * @param   TDefault|null                   $default    default value if the path is not set
+	 * @param   string                          $delimiter  key path delimiter
+	 *
+	 * @return  TValue|TDefault|null
 	 */
 	public static function path($array, $path, $default = NULL, $delimiter = NULL)
 	{
@@ -195,10 +202,16 @@ class KO7_Arr {
 	* Set a value on an array by path.
 	*
 	* @see Arr::path()
-	* @param array   $array     Array to update
-	* @param string  $path      Path
-	* @param mixed   $value     Value to set
-	* @param string  $delimiter Path delimiter
+	*
+	* @template TKey
+	* @template TValue
+	*
+	* @param iterable<TKey, TValue> $array     Array to update
+	* @param string                 $path      Path
+	* @param mixed                  $value     Value to set
+	* @param string                 $delimiter Path delimiter
+	*
+	* @return void
 	*/
 	public static function set_path( & $array, $path, $value, $delimiter = NULL)
 	{
@@ -247,7 +260,8 @@ class KO7_Arr {
 	 *
 	 * @param   integer $step   stepping
 	 * @param   integer $max    ending number
-	 * @return  array
+	 *
+	 * @return  array<int, int>
 	 */
 	public static function range($step = 10, $max = 100)
 	{
@@ -273,10 +287,15 @@ class KO7_Arr {
 	 *     // Get the value "sorting" from $_GET, if it exists
 	 *     $sorting = Arr::get($_GET, 'sorting');
 	 *
-	 * @param   array   $array      array to extract from
-	 * @param   string  $key        key name
-	 * @param   mixed   $default    default value
-	 * @return  mixed
+	 * @template TKey
+	 * @template TValue
+	 * @template TDefault
+	 *
+	 * @param   array<TKey, TValue>|ArrayObject $array      array to extract from
+	 * @param   string                          $key        key name
+	 * @param   TDefault|null                   $default    default value
+	 *
+	 * @return  TValue|TDefault|null
 	 */
 	public static function get($array, $key, $default = NULL)
 	{
@@ -300,9 +319,14 @@ class KO7_Arr {
 	 *     $data = array('level1' => array('level2a' => 'value 1', 'level2b' => 'value 2'));
 	 *     Arr::extract($data, array('level1.level2a', 'password'));
 	 *
-	 * @param   array  $array    array to extract paths from
-	 * @param   array  $paths    list of path
-	 * @param   mixed  $default  default value
+	 * @template TKey
+	 * @template TValue
+	 * @template TDefault
+	 *
+	 * @param   iterable<TKey, TValue> $array    array to extract paths from
+	 * @param   string[]               $paths    list of path
+	 * @param   TDefault|null          $default  default value
+	 *
 	 * @return  array
 	 */
 	public static function extract($array, array $paths, $default = NULL)
@@ -324,9 +348,10 @@ class KO7_Arr {
 	 *
 	 * [!!] A list of arrays is an array that contains arrays, eg: array(array $a, array $b, array $c, ...)
 	 *
-	 * @param   array   $array  list of arrays to check
-	 * @param   string  $key    key to pluck
-	 * @return  array
+	 * @param   iterable<string, mixed> $array  list of arrays to check
+	 * @param   string                  $key    key to pluck
+	 *
+	 * @return  array<array-key, mixed>
 	 */
 	public static function pluck($array, $key)
 	{
@@ -350,10 +375,14 @@ class KO7_Arr {
 	 *     // Add an empty value to the start of a select list
 	 *     Arr::unshift($array, 'none', 'Select a value');
 	 *
-	 * @param   array   $array  array to modify
+	 * @template TKey
+	 * @template TValue
+	 *
+	 * @param   array<TKey, TValue>   $array  array to modify
 	 * @param   string  $key    array key name
 	 * @param   mixed   $val    array value
-	 * @return  array
+	 *
+	 * @return  array<TKey, TValue>
 	 */
 	public static function unshift( array & $array, $key, $val)
 	{
@@ -383,10 +412,14 @@ class KO7_Arr {
 	 * [!!] Unlike `array_map`, this method requires a callback and will only map
 	 * a single array.
 	 *
-	 * @param   mixed   $callbacks  array of callbacks to apply to every element in the array
-	 * @param   array   $array      array to map
-	 * @param   array   $keys       array of keys to apply to
-	 * @return  array
+	 * @template TKey
+	 * @template TValue
+	 *
+	 * @param   callable|callable[] $callbacks  single callback or array of callbacks to apply to every element in the array
+	 * @param   array<TKey, TValue> $array      array to map
+	 * @param   TKey[]|null         $keys       array of keys to apply to
+	 *
+	 * @return  array<TKey, mixed>
 	 */
 	public static function map($callbacks, $array, $keys = NULL)
 	{
@@ -433,6 +466,7 @@ class KO7_Arr {
 	 *
 	 * @param   array  $array1      initial array
 	 * @param   array  $array2,...  array to merge
+	 *
 	 * @return  array
 	 */
 	public static function merge($array1, $array2)
@@ -517,6 +551,7 @@ class KO7_Arr {
 	 *
 	 * @param   array   $array1 master array
 	 * @param   array   $array2 input arrays that will overwrite existing values
+	 *
 	 * @return  array
 	 */
 	public static function overwrite($array1, $array2)
@@ -551,6 +586,7 @@ class KO7_Arr {
 	 *     $result = call_user_func_array($func, $params);
 	 *
 	 * @param   string  $str    callback string
+	 *
 	 * @return  array   function, params
 	 */
 	public static function callback($str)
@@ -600,7 +636,9 @@ class KO7_Arr {
 	 * [!!] The keys of array values will be discarded.
 	 *
 	 * @param   array   $array  array to flatten
+	 *
 	 * @return  array
+	 *
 	 * @since   3.0.6
 	 */
 	public static function flatten($array)

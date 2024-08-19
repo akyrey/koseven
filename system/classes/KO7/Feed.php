@@ -16,7 +16,10 @@ class KO7_Feed {
 	 *
 	 * @param   string  $feed   remote feed URL
 	 * @param   integer $limit  item limit to fetch
-	 * @return  array
+	 *
+	 * @return  array<array-key, array<array-key, mixed>>
+	 *
+	 * @throws KO7_Exception when SimpleXML is not installed
 	 */
 	public static function parse($feed, $limit = 0)
 	{
@@ -84,6 +87,7 @@ class KO7_Feed {
 	 * @param   array   $info       feed information
 	 * @param   array   $items      items to add to the feed
 	 * @param   string  $encoding   define which encoding to use
+	 *
 	 * @return  string
 	 */
 	public static function create($info, $items, $encoding = 'UTF-8')

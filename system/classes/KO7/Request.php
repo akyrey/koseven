@@ -23,17 +23,17 @@ class KO7_Request implements HTTP_Request {
 	public static $client_ip = '0.0.0.0';
 
 	/**
-	 * @var  string  trusted proxy server IPs
+	 * @var  string[]  trusted proxy server IPs
 	 */
 	public static $trusted_proxies = ['127.0.0.1', 'localhost', 'localhost.localdomain'];
 
 	/**
-	 * @var  Request  main request instance
+	 * @var  static  main request instance
 	 */
 	public static $initial;
 
 	/**
-	 * @var  Request  currently executing request instance
+	 * @var  static  currently executing request instance
 	 */
 	public static $current;
 
@@ -46,14 +46,17 @@ class KO7_Request implements HTTP_Request {
 	 * If $cache parameter is set, the response for the request will attempt to
 	 * be retrieved from the cache.
 	 *
-	 * @param   string  $uri              URI of the request
+	 * @uses    Route::all
+	 * @uses    Route::matches
+	 *
+	 * @param   string|bool  $uri              URI of the request
 	 * @param   array   $client_params    An array of params to pass to the request client
 	 * @param   bool    $allow_external   Allow external requests? (deprecated in 3.3)
 	 * @param   array   $injected_routes  An array of routes to use, for testing
-	 * @return  void|Request
+	 *
+	 * @return  static
+	 *
 	 * @throws  Request_Exception
-	 * @uses    Route::all
-	 * @uses    Route::matches
 	 */
 	public static function factory($uri = TRUE, $client_params = [], $allow_external = TRUE, $injected_routes = [])
 	{
@@ -212,14 +215,15 @@ class KO7_Request implements HTTP_Request {
 	}
 
 	/**
-	 * Automatically detects the URI of the main request using PATH_INFO,
-	 * REQUEST_URI, PHP_SELF or REDIRECT_URL.
+	 * Automatically detects the URI of the main request using PATH_INFO, REQUEST_URI, PHP_SELF or REDIRECT_URL.
 	 *
 	 *     $uri = Request::detect_uri();
 	 *
-	 * @return  string  URI of the main request
-	 * @throws  KO7_Exception
 	 * @since   3.0.8
+	 *
+	 * @return  string  URI of the main request
+	 *
+	 * @throws  KO7_Exception should only happen if no valid URI is found (open an issue on GitHub with server config)
 	 */
 	public static function detect_uri()
 	{
@@ -295,8 +299,9 @@ class KO7_Request implements HTTP_Request {
 	 *
 	 *     $request = Request::current();
 	 *
-	 * @return  Request
 	 * @since   3.0.5
+	 *
+	 * @return  static
 	 */
 	public static function current()
 	{
@@ -314,8 +319,9 @@ class KO7_Request implements HTTP_Request {
 	 *     if (Request::initial() === Request::current())
 	 *          // Do something useful
 	 *
-	 * @return  Request
 	 * @since   3.1.0
+	 *
+	 * @return  static
 	 */
 	public static function initial()
 	{
@@ -325,10 +331,12 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Returns information about the initial user agent.
 	 *
-	 * @param   mixed   $value  array or string to return: browser, version, robot, mobile, platform
-	 * @return  mixed   requested information, FALSE if nothing is found
 	 * @uses    Request::$user_agent
 	 * @uses    Text::user_agent
+	 *
+	 * @param   array|string   $value  array or string to return: browser, version, robot, mobile, platform
+	 *
+	 * @return  array<string, mixed>|string|false   requested information, FALSE if nothing is found
 	 */
 	public static function user_agent($value)
 	{
@@ -340,9 +348,10 @@ class KO7_Request implements HTTP_Request {
 	 * does not handle this situation gracefully on its own, so this method
 	 * helps to solve that problem.
 	 *
-	 * @return  boolean
 	 * @uses    Num::bytes
 	 * @uses    Arr::get
+	 *
+	 * @return  boolean
 	 */
 	public static function post_max_size_exceeded()
 	{
@@ -360,9 +369,10 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Process a request to find a matching route
 	 *
-	 * @param   object  $request Request
-	 * @param   array   $routes  Route
-	 * @return  array
+	 * @param   static  $request Request
+	 * @param   array<string, Route>|null   $routes  Route
+	 *
+	 * @return  array{params: array<string, mixed>, route: Route}|null
 	 */
 	public static function process(Request $request, $routes = NULL)
 	{
@@ -398,8 +408,9 @@ class KO7_Request implements HTTP_Request {
 	 *     $accept = Request::_parse_accept($header, $defaults);
 	 *
 	 * @param   string   $header   Header to parse
-	 * @param   array    $accepts  Default values
-	 * @return  array
+	 * @param   array<string, float>|null    $accepts  Default values
+	 *
+	 * @return  array<string, float>
 	 */
 	protected static function _parse_accept( & $header, array $accepts = NULL)
 	{
@@ -450,7 +461,7 @@ class KO7_Request implements HTTP_Request {
 	}
 
 	/**
-	 * @var  string  the x-requested-with header which most likely
+	 * @var  string|null  the x-requested-with header which most likely
 	 *               will be xmlhttprequest
 	 */
 	protected $_requested_with;
@@ -461,7 +472,7 @@ class KO7_Request implements HTTP_Request {
 	protected $_method = 'GET';
 
 	/**
-	 * @var  string  protocol: HTTP/1.1, FTP, CLI, etc
+	 * @var  string|null  protocol: HTTP/1.1, FTP, CLI, etc
 	 */
 	protected $_protocol;
 
@@ -471,27 +482,27 @@ class KO7_Request implements HTTP_Request {
 	protected $_secure = FALSE;
 
 	/**
-	 * @var  string  referring URL
+	 * @var  string|null  referring URL
 	 */
 	protected $_referrer;
 
 	/**
-	 * @var  Route       route matched for this request
+	 * @var  Route|null       route matched for this request
 	 */
 	protected $_route;
 
 	/**
-	 * @var  Route       array of routes to manually look at instead of the global namespace
+	 * @var  array<string, Route>       array of routes to manually look at instead of the global namespace
 	 */
 	protected $_routes;
 
 	/**
-	 * @var  KO7_HTTP_Header  headers to sent as part of the request
+	 * @var  HTTP_Header  headers to sent as part of the request
 	 */
 	protected $_header;
 
 	/**
-	 * @var  string the body
+	 * @var  string|null the body
 	 */
 	protected $_body;
 
@@ -501,18 +512,17 @@ class KO7_Request implements HTTP_Request {
 	protected $_directory = '';
 
 	/**
-	 * @var  string  controller to be executed
+	 * @var  string|null  controller to be executed
 	 */
 	protected $_controller;
 
-    /**
-     * Requested Format (json, xml, html)
-     * @var string
-     */
-    protected $_format;
+	/**
+	 * @var string|null Requested Format (json, xml, html)
+	 */
+  protected $_format;
 
 	/**
-	 * @var  string  action to be executed in the controller
+	 * @var  string|null  action to be executed in the controller
 	 */
 	protected $_action;
 
@@ -527,27 +537,27 @@ class KO7_Request implements HTTP_Request {
 	protected $_external = FALSE;
 
 	/**
-	 * @var  array   parameters from the route
+	 * @var  array<string, mixed>   parameters from the route
 	 */
 	protected $_params = [];
 
 	/**
-	 * @var array    query parameters
+	 * @var array<string, mixed>   query parameters
 	 */
 	protected $_get = [];
 
 	/**
-	 * @var array    post parameters
+	 * @var array<string, mixed>    post parameters
 	 */
 	protected $_post = [];
 
 	/**
-	 * @var array    cookies to send with the request
+	 * @var array<string, string>    cookies to send with the request
 	 */
 	protected $_cookies = [];
 
 	/**
-	 * @var KO7_Request_Client
+	 * @var Request_Client
 	 */
 	protected $_client;
 
@@ -560,14 +570,17 @@ class KO7_Request implements HTTP_Request {
 	 * If $cache parameter is set, the response for the request will attempt to
 	 * be retrieved from the cache.
 	 *
-	 * @param   string  $uri              URI of the request
-	 * @param   array   $client_params    Array of params to pass to the request client
-	 * @param   bool    $allow_external   Allow external requests? (deprecated in 3.3)
-	 * @param   array   $injected_routes  An array of routes to use, for testing
-	 * @return  void
-	 * @throws  Request_Exception
 	 * @uses    Route::all
 	 * @uses    Route::matches
+	 *
+	 * @param   string  $uri              URI of the request
+	 * @param   array<string, mixed>   $client_params    Array of params to pass to the request client
+	 * @param   bool    $allow_external   Allow external requests? (deprecated in 3.3)
+	 * @param   array<string, Route>   $injected_routes  An array of routes to use, for testing
+	 *
+	 * @return  void
+	 *
+	 * @throws  Request_Exception
 	 */
 	public function __construct($uri, $client_params = [], $allow_external = TRUE, $injected_routes = [])
 	{
@@ -637,7 +650,8 @@ class KO7_Request implements HTTP_Request {
 	 * Sets and gets the uri from the request.
 	 *
 	 * @param   string $uri
-	 * @return  mixed
+	 *
+	 * @return  static|string value of the uri as getter, $this as setter
 	 */
 	public function uri($uri = NULL)
 	{
@@ -658,10 +672,13 @@ class KO7_Request implements HTTP_Request {
 	 *
 	 *     echo URL::site($this->request->uri(), $protocol);
 	 *
-	 * @param   mixed    $protocol  protocol string or Request object
-	 * @return  string
 	 * @since   3.0.7
+	 *
 	 * @uses    URL::site
+	 *
+	 * @param   Request|string    $protocol  protocol string or Request object
+	 *
+	 * @return  string
 	 */
 	public function url($protocol = NULL)
 	{
@@ -680,9 +697,14 @@ class KO7_Request implements HTTP_Request {
 	 *
 	 *     $id = $request->param('id');
 	 *
-	 * @param   string   $key      Key of the value
-	 * @param   mixed    $default  Default value if the key is not set
-	 * @return  mixed
+	 * @template TValue
+	 * @template TDefault
+	 *
+	 * @param   string           $key      Key of the value
+	 * @param   TDefault|null    $default  Default value if the key is not set
+	 *
+	 * @return  array<string, TValue>|TValue|TDefault|null the entire params array if no key is set,
+	 *                                                     otherwise the value or default if not found
 	 */
 	public function param($key = NULL, $default = NULL)
 	{
@@ -695,30 +717,31 @@ class KO7_Request implements HTTP_Request {
 		return isset($this->_params[$key]) ? $this->_params[$key] : $default;
 	}
 
-    /**
-     * Get / Set requested format
-     *
-     * @param string|null $format e.g JSON, XML, etc...
-     *
-     * @return $this|string
-     */
+	/**
+	 * Get / Set requested format
+	 *
+	 * @param string|null $format e.g JSON, XML, etc...
+	 *
+	 * @return  static|string value of the format as getter, $this as setter
+	 */
 	public function format(?string $format = NULL)
-    {
-        if ($format === NULL)
-        {
-            return $this->_format;
-        }
+	{
+		if ($format === NULL)
+		{
+			return $this->_format;
+		}
 
-        $this->_format = $format;
+		$this->_format = $format;
 
-        return $this;
-    }
+		return $this;
+	}
 
 	/**
 	 * Sets and gets the referrer from the request.
 	 *
-	 * @param   string $referrer
-	 * @return  mixed
+	 * @param   string|null $referrer
+	 *
+	 * @return  static|string value of the referrer as getter, $this as setter
 	 */
 	public function referrer($referrer = NULL)
 	{
@@ -737,8 +760,9 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Sets and gets the route from the request.
 	 *
-	 * @param   string $route
-	 * @return  mixed
+	 * @param   Route|null $route
+	 *
+	 * @return  static|Route|null value of the route as getter, $this as setter
 	 */
 	public function route(Route $route = NULL)
 	{
@@ -757,8 +781,9 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Sets and gets the directory for the controller.
 	 *
-	 * @param   string   $directory  Directory to execute the controller from
-	 * @return  mixed
+	 * @param   string|null   $directory  Directory to execute the controller from
+	 *
+	 * @return  static|string value of the directory as getter, $this as setter
 	 */
 	public function directory($directory = NULL)
 	{
@@ -777,8 +802,9 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Sets and gets the controller for the matched route.
 	 *
-	 * @param   string   $controller  Controller to execute the action
-	 * @return  mixed
+	 * @param   string|null   $controller  Controller to execute the action
+	 *
+	 * @return  static|string|null value of the controller as getter, $this as setter
 	 */
 	public function controller($controller = NULL)
 	{
@@ -797,8 +823,9 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Sets and gets the action for the controller.
 	 *
-	 * @param   string   $action  Action to execute the controller from
-	 * @return  mixed
+	 * @param   string|null   $action  Action to execute the controller from
+	 *
+	 * @return  static|string|null value of the action as getter, $this as setter
 	 */
 	public function action($action = NULL)
 	{
@@ -817,8 +844,9 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Provides access to the [Request_Client].
 	 *
-	 * @return  Request_Client
-	 * @return  self
+	 * @param  Request_Client|null $client
+	 *
+	 * @return  static|Request_Client the client as getter, $this as setter
 	 */
 	public function client(Request_Client $client = NULL)
 	{
@@ -835,8 +863,9 @@ class KO7_Request implements HTTP_Request {
 	 * Gets and sets the requested with property, which should
 	 * be relative to the x-requested-with pseudo header.
 	 *
-	 * @param   string    $requested_with Requested with value
-	 * @return  mixed
+	 * @param   string|null    $requested_with Requested with value
+	 *
+	 * @return  static|string|null value of the requested with as getter, $this as setter
 	 */
 	public function requested_with($requested_with = NULL)
 	{
@@ -867,11 +896,13 @@ class KO7_Request implements HTTP_Request {
 	 *
 	 *     $request->execute();
 	 *
-	 * @return  Response
-	 * @throws  Request_Exception
-	 * @throws  HTTP_Exception_404
 	 * @uses    [KO7::$profiling]
 	 * @uses    [Profiler]
+	 *
+	 * @return  Response
+	 *
+	 * @throws  Request_Exception
+	 * @throws  HTTP_Exception_404
 	 */
 	public function execute()
 	{
@@ -896,9 +927,9 @@ class KO7_Request implements HTTP_Request {
 
 				// Requested format e.g XML, JSON, etc..
 				if (isset($params['format']))
-                {
-                    $this->_format = $params['format'];
-                }
+				{
+					$this->_format = $params['format'];
+				}
 
 				// Store the controller
 				$this->_controller = $params['controller'];
@@ -926,7 +957,7 @@ class KO7_Request implements HTTP_Request {
 
 		if ( ! $this->_client instanceof Request_Client)
 		{
-			throw new Request_Exception('Unable to execute :uri without a KO7_Request_Client', [
+			throw new Request_Exception('Unable to execute :uri without a Request_Client', [
 				':uri' => $this->_uri,
 			]);
 		}
@@ -975,8 +1006,10 @@ class KO7_Request implements HTTP_Request {
 	 * Gets or sets the HTTP method. Usually GET, POST, PUT or DELETE in
 	 * traditional CRUD applications.
 	 *
-	 * @param   string   $method  Method to use for this request
-	 * @return  mixed
+	 * @param   string|null   $method  Method to use for this request
+	 *
+	 * @return  static|string request method as getter ('GET', 'POST', 'PUT', 'DELETE', 'HEAD', etc)
+	 *                        or $this as setter
 	 */
 	public function method($method = NULL)
 	{
@@ -1002,8 +1035,9 @@ class KO7_Request implements HTTP_Request {
 	 * Gets or sets the HTTP protocol. If there is no current protocol set,
 	 * it will use the default set in HTTP::$protocol
 	 *
-	 * @param   string   $protocol  Protocol to set to the request
-	 * @return  mixed
+	 * @param   string|null   $protocol  Protocol to set to the request
+	 *
+	 * @return  static|string protocol value as getter, $this as setter
 	 */
 	public function protocol($protocol = NULL)
 	{
@@ -1024,8 +1058,9 @@ class KO7_Request implements HTTP_Request {
 	 * Getter/Setter to the security settings for this request. This
 	 * method should be treated as immutable.
 	 *
-	 * @param   boolean $secure is this request secure?
-	 * @return  mixed
+	 * @param   boolean|null $secure is this request secure?
+	 *
+	 * @return  static|bool secure value as getter, $this as setter
 	 */
 	public function secure($secure = NULL)
 	{
@@ -1043,9 +1078,12 @@ class KO7_Request implements HTTP_Request {
 	 * transmission. This method provides a simple array or key/value
 	 * interface to the headers.
 	 *
-	 * @param   mixed   $key   Key or array of key/value pairs to set
-	 * @param   string  $value Value to set to the supplied key
-	 * @return  mixed
+	 * @template TValue
+	 *
+	 * @param   HTTP_Header|array<string, mixed> $key   Key or array of key/value pairs to set
+	 * @param   string|null                      $value Value to set to the supplied key
+	 *
+	 * @return  static|HTTP_Header|TValue|null all headers or single header as getter, $this as setter
 	 */
 	public function headers($key = NULL, $value = NULL)
 	{
@@ -1091,10 +1129,10 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Set and get cookies values for this request.
 	 *
-	 * @param   mixed    $key    Cookie name, or array of cookie values
-	 * @param   string   $value  Value to set to cookie
-	 * @return  string
-	 * @return  mixed
+	 * @param   string|array<string, string>|null $key    Cookie name, or array of cookie values
+	 * @param   string|null                       $value  Value to set to cookie
+	 *
+	 * @return  static|array<string, string>|string|null all cookies or single cookie as getter, $this as setter
 	 */
 	public function cookie($key = NULL, $value = NULL)
 	{
@@ -1125,8 +1163,9 @@ class KO7_Request implements HTTP_Request {
 	 * Gets or sets the HTTP body of the request. The body is
 	 * included after the header, separated by a single empty new line.
 	 *
-	 * @param   string  $content Content to set to the object
-	 * @return  mixed
+	 * @param   string|null  $content Content to set to the object
+	 *
+	 * @return  static|string|null body value as getter, $this as setter
 	 */
 	public function body($content = NULL)
 	{
@@ -1160,7 +1199,7 @@ class KO7_Request implements HTTP_Request {
 	 *  - Headers
 	 *  - Body
 	 *
-	 *  If there are variables set to the `KO7_Request::$_post`
+	 *  If there are variables set to the `Request::$_post`
 	 *  they will override any values set to body.
 	 *
 	 * @return  string
@@ -1173,7 +1212,7 @@ class KO7_Request implements HTTP_Request {
 		}
 		else
 		{
-			$body = http_build_query($post, NULL, '&');
+			$body = http_build_query($post, '', '&');
 			$this->body($body)
 				->headers('content-type', 'application/x-www-form-urlencoded; charset='.KO7::$charset);
 		}
@@ -1212,10 +1251,12 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Gets or sets HTTP query string.
 	 *
-	 * @param   mixed   $key    Key or key value pairs to set
-	 * @param   string  $value  Value to set to a key
-	 * @return  mixed
 	 * @uses    Arr::path
+	 *
+	 * @param   string|array<string, mixed>|null $key    Key or key value pairs to set
+	 * @param   string|null                      $value  Value to set to a key
+	 *
+	 * @return  static|array<string, mixed>|mixed|null all query values or single query value as getter, $this as setter
 	 */
 	public function query($key = NULL, $value = NULL)
 	{
@@ -1247,10 +1288,12 @@ class KO7_Request implements HTTP_Request {
 	/**
 	 * Gets or sets HTTP POST parameters to the request.
 	 *
-	 * @param   mixed  $key    Key or key value pairs to set
-	 * @param   string $value  Value to set to a key
-	 * @return  mixed
 	 * @uses    Arr::path
+	 *
+	 * @param   string|array<string, mixed>|null $key    Key or key value pairs to set
+	 * @param   string|null                      $value  Value to set to a key
+	 *
+	 * @return  static|array<string, mixed>|mixed|null all post values or single post value as getter, $this as setter
 	 */
 	public function post($key = NULL, $value = NULL)
 	{

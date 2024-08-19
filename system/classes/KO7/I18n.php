@@ -19,7 +19,7 @@
  *
  * @package    KO7
  * @category   Base
- * 
+ *
  * @copyright  (c) 2008 - 2016 Kohana Team
  * @copyright  (c) since  2018 Koseven Team
  * @license    https://koseven.dev/LICENSE
@@ -40,7 +40,7 @@ class KO7_I18n {
 
 	/**
 	 * Cache of loaded languages
-	 * @var array
+	 * @var array<string, array>
 	 */
 	protected static $_cache = [];
 
@@ -53,10 +53,11 @@ class KO7_I18n {
 	 *     // Change the current language to Spanish
 	 *     I18n::lang('es-es');
 	 *
-	 * @param   string  $lang  New target language
+	 * @since   3.0.2
+	 *
+	 * @param   string|null  $lang  New target language
 	 *
 	 * @return  string
-	 * @since   3.0.2
 	 */
 	public static function lang(string $lang = NULL) : string
 	{
@@ -74,9 +75,10 @@ class KO7_I18n {
 	 *
 	 *     $hello = I18n::get('Hello friends, my name is :name');
 	 *
-	 * @param   string|array  $string Text to translate or array [text, values]
-	 * @param   string  	  $lang   Target Language
-	 * @param   string		  $source Source Language
+	 * @param   string|array $string Text to translate or array [text, values]
+	 * @param   string|null  $lang   Target Language
+	 * @param   string|null  $source Source Language
+	 *
 	 * @return  string
 	 */
 	public static function get($string, string $lang = NULL, string $source = NULL)
@@ -129,6 +131,7 @@ class KO7_I18n {
 	 *     $messages = I18n::load('en-us');
 	 *
 	 * @param   string  $lang   language to load
+	 *
 	 * @return  array
 	 */
 	public static function load(string $lang) : array
@@ -182,9 +185,9 @@ if ( ! function_exists('__'))
 	 *
 	 * @uses    I18n::get
 	 *
-	 * @param   string  $string  Text to translate
-	 * @param   array   $values  Values to replace in the translated text
-	 * @param   string  $lang    Source language
+	 * @param   string                     $string  Text to translate
+	 * @param   array<string, string>|null $values  Values to replace in the translated text
+	 * @param   string|null                $lang    Source language
 	 *
 	 * @return  string
 	 */

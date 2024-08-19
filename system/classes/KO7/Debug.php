@@ -46,6 +46,7 @@ class KO7_Debug {
 	 * @param   mixed   $value              variable to dump
 	 * @param   integer $length             maximum length of strings
 	 * @param   integer $level_recursion    recursion limit
+	 *
 	 * @return  string
 	 */
 	public static function dump($value, $length = 128, $level_recursion = 10)
@@ -60,6 +61,7 @@ class KO7_Debug {
 	 * @param   integer $length maximum length of strings
 	 * @param   integer $limit  recursion limit
 	 * @param   integer $level  current recursion level (internal usage only!)
+	 *
 	 * @return  string
 	 */
 	protected static function _dump( & $var, $length = 128, $limit = 10, $level = 0)
@@ -239,6 +241,7 @@ class KO7_Debug {
 	 *     echo Debug::path(KO7::find_file('classes', 'KO7'));
 	 *
 	 * @param   string  $file   path to debug
+	 *
 	 * @return  string
 	 */
 	public static function path($file)
@@ -273,8 +276,8 @@ class KO7_Debug {
 	 * @param   string  $file           file to open
 	 * @param   integer $line_number    line number to highlight
 	 * @param   integer $padding        number of padding lines
-	 * @return  string   source of file
-	 * @return  FALSE    file is unreadable
+	 *
+	 * @return  string|false   source of file or FALSE if file is unreadable
 	 */
 	public static function source($file, $line_number, $padding = 5)
 	{
@@ -337,7 +340,8 @@ class KO7_Debug {
 	 *     echo implode('<br/>', Debug::trace());
 	 *
 	 * @param   array|null   $trace     Stack to trace
-	 * @return  string
+	 *
+	 * @return  string[]
 	 */
 	public static function trace(array $trace = NULL)
 	{

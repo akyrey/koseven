@@ -26,12 +26,14 @@ class KO7_Form {
 	 *     // When "file" inputs are present, you must include the "enctype"
 	 *     echo Form::open(NULL, array('enctype' => 'multipart/form-data'));
 	 *
-	 * @param   mixed   $action     form action, defaults to the current request URI, or [Request] class to use
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    Request
 	 * @uses    URL::site
 	 * @uses    HTML::attributes
+	 *
+	 * @param   Request|string|null        $action     form action, defaults to the current request URI, or [Request] class to use
+	 * @param   array<string, string>|null $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function open($action = NULL, array $attributes = NULL)
 	{
@@ -85,11 +87,13 @@ class KO7_Form {
 	 *
 	 *     echo Form::input('username', $username);
 	 *
-	 * @param   string  $name       input name
-	 * @param   string  $value      input value
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                     $name       input name
+	 * @param   string|null                $value      input value
+	 * @param   array<string, string>|null $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function input($name, $value = NULL, array $attributes = NULL)
 	{
@@ -113,11 +117,13 @@ class KO7_Form {
 	 *
 	 *     echo Form::hidden('csrf', $token);
 	 *
-	 * @param   string  $name       input name
-	 * @param   string  $value      input value
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    Form::input
+	 *
+	 * @param   string                      $name       input name
+	 * @param   string|null                 $value      input value
+	 * @param   array<string, string>|null  $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function hidden($name, $value = NULL, array $attributes = NULL)
 	{
@@ -131,11 +137,13 @@ class KO7_Form {
 	 *
 	 *     echo Form::password('password');
 	 *
-	 * @param   string  $name       input name
-	 * @param   string  $value      input value
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    Form::input
+	 *
+	 * @param   string                      $name       input name
+	 * @param   string|null                 $value      input value
+	 * @param   array<string, string>|null  $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function password($name, $value = NULL, array $attributes = NULL)
 	{
@@ -149,10 +157,12 @@ class KO7_Form {
 	 *
 	 *     echo Form::file('image');
 	 *
-	 * @param   string  $name       input name
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    Form::input
+	 *
+	 * @param   string                     $name       input name
+	 * @param   array<string, string>|null $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function file($name, array $attributes = NULL)
 	{
@@ -166,12 +176,14 @@ class KO7_Form {
 	 *
 	 *     echo Form::checkbox('remember_me', 1, (bool) $remember);
 	 *
-	 * @param   string  $name       input name
-	 * @param   string  $value      input value
-	 * @param   boolean $checked    checked status
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    Form::input
+	 *
+	 * @param   string                     $name       input name
+	 * @param   string|null                $value      input value
+	 * @param   boolean                    $checked    checked status
+	 * @param   array<string, string>|null $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function checkbox($name, $value = NULL, $checked = FALSE, array $attributes = NULL)
 	{
@@ -192,12 +204,14 @@ class KO7_Form {
 	 *     echo Form::radio('like_cats', 1, $cats);
 	 *     echo Form::radio('like_cats', 0, ! $cats);
 	 *
-	 * @param   string  $name       input name
-	 * @param   string  $value      input value
-	 * @param   boolean $checked    checked status
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    Form::input
+	 *
+	 * @param   string                     $name       input name
+	 * @param   string|null                $value      input value
+	 * @param   boolean                    $checked    checked status
+	 * @param   array<string, string>|null $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function radio($name, $value = NULL, $checked = FALSE, array $attributes = NULL)
 	{
@@ -217,13 +231,15 @@ class KO7_Form {
 	 *
 	 *     echo Form::textarea('about', $about);
 	 *
-	 * @param   string  $name           textarea name
-	 * @param   string  $body           textarea body
-	 * @param   array   $attributes     html attributes
-	 * @param   boolean $double_encode  encode existing HTML characters
-	 * @return  string
 	 * @uses    HTML::attributes
 	 * @uses    HTML::chars
+	 *
+	 * @param   string                     $name           textarea name
+	 * @param   string                     $body           textarea body
+	 * @param   array<string, string>|null $attributes     html attributes
+	 * @param   boolean                    $double_encode  encode existing HTML characters
+	 *
+	 * @return  string
 	 */
 	public static function textarea($name, $body = '', array $attributes = NULL, $double_encode = TRUE)
 	{
@@ -243,12 +259,17 @@ class KO7_Form {
 	 *
 	 * [!!] Support for multiple selected options was added in v3.0.7.
 	 *
-	 * @param   string  $name       input name
-	 * @param   array   $options    available options
-	 * @param   mixed   $selected   selected option string, or an array of selected options
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    HTML::attributes
+	 *
+	 * @template TKey
+	 * @template TValue
+	 *
+	 * @param   string                     $name       input name
+	 * @param   array<TKey, TValue>        $options    available options
+	 * @param   TKey|TKey[]|null           $selected   selected option string, or an array of selected options
+	 * @param   array<string, string>|null $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function select($name, array $options = NULL, $selected = NULL, array $attributes = NULL)
 	{
@@ -346,11 +367,13 @@ class KO7_Form {
 	 *
 	 *     echo Form::submit(NULL, 'Login');
 	 *
-	 * @param   string  $name       input name
-	 * @param   string  $value      input value
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    Form::input
+	 *
+	 * @param   string                     $name       input name
+	 * @param   string                     $value      input value
+	 * @param   array<string, string>|null $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function submit($name, $value, array $attributes = NULL)
 	{
@@ -364,12 +387,14 @@ class KO7_Form {
 	 *
 	 *     echo Form::image(NULL, NULL, array('src' => 'media/img/login.png'));
 	 *
-	 * @param   string  $name       input name
-	 * @param   string  $value      input value
-	 * @param   array   $attributes html attributes
-	 * @param   boolean $index      add index file to URL?
-	 * @return  string
 	 * @uses    Form::input
+	 *
+	 * @param   string                     $name       input name
+	 * @param   string                     $value      input value
+	 * @param   array<string, string>|null $attributes html attributes
+	 * @param   boolean                    $index      add index file to URL?
+	 *
+	 * @return  string
 	 */
 	public static function image($name, $value, array $attributes = NULL, $index = FALSE)
 	{
@@ -393,11 +418,13 @@ class KO7_Form {
 	 *
 	 *     echo Form::button('save', 'Save Profile', array('type' => 'submit'));
 	 *
-	 * @param   string  $name       input name
-	 * @param   string  $body       input value
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                     $name       input name
+	 * @param   string                     $body       input value
+	 * @param   array<string, string>|null $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function button($name, $body, array $attributes = NULL)
 	{
@@ -412,11 +439,13 @@ class KO7_Form {
 	 *
 	 *     echo Form::label('username', 'Username');
 	 *
-	 * @param   string  $input      target input
-	 * @param   string  $text       label text
-	 * @param   array   $attributes html attributes
-	 * @return  string
 	 * @uses    HTML::attributes
+	 *
+	 * @param   string                     $input      target input
+	 * @param   string|null                $text       label text, use input name if NULL
+	 * @param   array<string, string>|null $attributes html attributes
+	 *
+	 * @return  string
 	 */
 	public static function label($input, $text = NULL, array $attributes = NULL)
 	{

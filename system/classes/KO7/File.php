@@ -19,8 +19,8 @@ class KO7_File {
 	 *     $mime = File::mime($file);
 	 *
 	 * @param   string  $filename   file name or path
-	 * @return  string  mime type on success
-	 * @return  FALSE   on failure
+	 *
+	 * @return  string|false  mime type on success or FALSE on failure
 	 */
 	public static function mime($filename)
 	{
@@ -68,8 +68,8 @@ class KO7_File {
 	 *     $mime = File::mime_by_ext('png'); // "image/png"
 	 *
 	 * @param   string  $extension  php, pdf, txt, etc
-	 * @return  string  mime type on success
-	 * @return  FALSE   on failure
+	 *
+	 * @return  string|false  mime type on success or FALSE on failure
 	 */
 	public static function mime_by_ext($extension)
 	{
@@ -86,8 +86,10 @@ class KO7_File {
 	 * Lookup MIME types for a file
 	 *
 	 * @see KO7_File::mime_by_ext()
+	 *
 	 * @param string $extension Extension to lookup
-	 * @return array Array of MIMEs associated with the specified extension
+	 *
+	 * @return string[] Array of MIMEs associated with the specified extension
 	 */
 	public static function mimes_by_ext($extension)
 	{
@@ -101,7 +103,8 @@ class KO7_File {
 	 * Lookup file extensions by MIME type
 	 *
 	 * @param   string  $type File MIME type
-	 * @return  array|false   File extensions matching MIME type or false if none
+	 *
+	 * @return  string[]|false   File extensions matching MIME type or false if none
 	 */
 	public static function exts_by_mime($type)
 	{
@@ -139,6 +142,7 @@ class KO7_File {
 	 * Lookup a single file extension by MIME type.
 	 *
 	 * @param   string  $type  MIME type to lookup
+	 *
 	 * @return  string|false   First file extension matching or false
 	 */
 	public static function ext_by_mime($type)
@@ -161,6 +165,7 @@ class KO7_File {
 	 *
 	 * @param   string  $filename   file to be split
 	 * @param   integer $piece_size size, in MB, for each piece to be
+	 *
 	 * @return  integer The number of pieces that were created
 	 */
 	public static function split($filename, $piece_size = 10)
@@ -215,6 +220,7 @@ class KO7_File {
 	 *     $count = File::join($file);
 	 *
 	 * @param   string  $filename   split filename, without .000 extension
+	 *
 	 * @return  integer The number of pieces that were joined.
 	 */
 	public static function join($filename)

@@ -101,7 +101,7 @@ class KO7_Core {
 	public static $errors = TRUE;
 
 	/**
-	 * @var  array  Types of errors to display at shutdown
+	 * @var  int[]  Types of errors to display at shutdown
 	 */
 	public static $shutdown_errors = [E_PARSE, E_ERROR, E_USER_ERROR];
 
@@ -131,7 +131,7 @@ class KO7_Core {
 	protected static $_modules = [];
 
 	/**
-	 * @var  array   Include paths that are used to find files
+	 * @var  string[]   Include paths that are used to find files
 	 */
 	protected static $_paths = [APPPATH, SYSPATH];
 
@@ -167,12 +167,25 @@ class KO7_Core {
 	 * `boolean` | caching    | Cache file locations to speed up [KO7::find_file].  This has nothing to do with [KO7::cache], [Fragments](ko7/fragments) or the [Cache module](cache).  <br /> <br />  Recommended setting: `FALSE` while developing, `TRUE` on production servers. | `FALSE`
 	 * `boolean` | expose     | Set the X-Powered-By header
 	 *
-	 * @throws  KO7_Exception
-	 * @param   array   $settings   Array of settings.  See above.
-	 * @return  void
 	 * @uses    KO7::sanitize
 	 * @uses    KO7::cache
 	 * @uses    Profiler
+	 *
+	 * @param   array{
+	 *            base_url?: string,
+	 *            index_file?: string,
+	 *            charset?: string,
+	 *            cache_dir?: string,
+	 *            cache_life?: int,
+	 *            errors?: bool,
+	 *            profile?: bool,
+	 *            caching?: bool,
+	 *            expose?: bool
+	 *              }|null            $settings   Array of settings.  See above.
+	 *
+	 * @return  void
+	 *
+	 * @throws  KO7_Exception
 	 */
 	public static function init(array $settings = NULL)
 	{
@@ -366,8 +379,11 @@ class KO7_Core {
 	 *
 	 * - Normalizes all newlines to LF
 	 *
-	 * @param   mixed   $value  any variable
-	 * @return  mixed   sanitized variable
+	 * @template TValue
+	 *
+	 * @param   TValue   $value  any variable
+	 *
+	 * @return  TValue   sanitized variable
 	 */
 	public static function sanitize($value)
 	{
@@ -413,6 +429,7 @@ class KO7_Core {
 	 *
 	 * @param   string  $class      Class name
 	 * @param   string  $directory  Directory to load from
+	 *
 	 * @return  boolean
 	 */
 	public static function auto_load($class, $directory = 'classes')
@@ -452,6 +469,7 @@ class KO7_Core {
 	 *
 	 * @param   string  $class      Class name
 	 * @param   string  $directory  Directory to load from
+	 *
 	 * @return  boolean
 	 */
 	public static function auto_load_lowercase($class, $directory = 'classes')
@@ -478,7 +496,8 @@ class KO7_Core {
 	 *
 	 *     KO7::modules(array('modules/foo', MODPATH.'bar'));
 	 *
-	 * @param   array   $modules    list of module paths
+	 * @param   array|null   $modules    list of module paths, or defaults if null
+	 *
 	 * @return  array   enabled modules
 	 */
 	public static function modules(array $modules = NULL)
@@ -536,7 +555,7 @@ class KO7_Core {
 	 * Returns the the currently active include paths, including the
 	 * application, system, and each module's path.
 	 *
-	 * @return  array
+	 * @return  string[]
 	 */
 	public static function include_paths()
 	{
@@ -569,8 +588,8 @@ class KO7_Core {
 	 * @param   string  $file   filename with subdirectory
 	 * @param   string  $ext    extension to search for
 	 * @param   boolean $array  return an array of files?
-	 * @return  array   a list of files when $array is TRUE
-	 * @return  string  single file path
+	 *
+	 * @return  array|string|false   a list of files when $array is TRUE, single file path when FALSE, or FALSE if not found
 	 */
 	public static function find_file($dir, $file, $ext = NULL, $array = FALSE)
 	{
@@ -682,12 +701,12 @@ class KO7_Core {
 	 *     // Find all view files.
 	 *     $views = KO7::list_files('views');
 	 *
-	 * @param   string  		$directory   directory name
-	 * @param   array   		$paths       list of paths to search
-	 * @param   string|array	$ext		 only list files with this extension
-	 * @param   bool			$sort		 sort alphabetically
+	 * @param   string|null       $directory   directory name
+	 * @param   array|null        $paths       list of paths to search, or default KO7::$_paths if NULL
+	 * @param   string|array|null $ext         only list files with this extension, or don't filter by extension when NULL
+	 * @param   bool|null         $sort        sort alphabetically, TRUE by default
 	 *
-	 * @return  array
+	 * @return  array<string, string|false>
 	 */
 	public static function list_files($directory = NULL, array $paths = NULL, $ext = NULL, $sort = NULL)
 	{
@@ -782,6 +801,7 @@ class KO7_Core {
 	 *     $foo = KO7::load('foo.php');
 	 *
 	 * @param   string  $file
+	 *
 	 * @return  mixed
 	 */
 	public static function load($file)
@@ -798,12 +818,13 @@ class KO7_Core {
      *     // Get the "foo" cache
      *     $foo = KO7::cache('foo');
      *
-     * @throws  KO7_Exception
      * @param   string  $name       name of the cache
      * @param   mixed   $data       data to cache
-     * @param   integer $lifetime   number of seconds the cache is valid for
-     * @return  mixed    for getting
-     * @return  boolean  for setting
+     * @param   integer|null $lifetime   number of seconds the cache is valid for
+     *
+     * @return  mixed|bool    mixed for getting and bool for setting
+     *
+     * @throws  KO7_Exception
      */
     public static function cache($name, $data = NULL, $lifetime = NULL)
     {
@@ -842,12 +863,13 @@ class KO7_Core {
      *
      * [ref-var]: http://php.net/var_export
      *
-     * @throws  KO7_Exception
      * @param   string  $name       name of the cache
      * @param   mixed   $data       data to cache
-     * @param   integer $lifetime   number of seconds the cache is valid for
-     * @return  mixed    for getting
-     * @return  boolean  for setting
+     * @param   integer|null $lifetime   number of seconds the cache is valid for
+     *
+     * @return  mixed|bool    mixed for getting and bool for setting
+     *
+     * @throws  KO7_Exception
      */
     public static function file_cache($name, $data = NULL, $lifetime = NULL)
     {
@@ -931,13 +953,16 @@ class KO7_Core {
 	 *     // Get "username" from messages/text.php
 	 *     $username = KO7::message('text', 'username');
 	 *
-	 * @param   string  $file       file name
-	 * @param   string  $path       key path to get
-	 * @param   mixed   $default    default value if the path does not exist
-	 * @return  string  message string for the given path
-	 * @return  array   complete message list, when no path is specified
 	 * @uses    Arr::merge
 	 * @uses    Arr::path
+	 *
+	 * @template TDefault
+	 *
+	 * @param   string        $file       file name
+	 * @param   string|null   $path       key path to get
+	 * @param   TDefault|null $default    default value if the path does not exist
+	 *
+	 * @return  string|array|TDefault|null  message string for the given path or complete message list, when no path is specified
 	 */
 	public static function message($file, $path = NULL, $default = NULL)
 	{
@@ -974,8 +999,14 @@ class KO7_Core {
 	 * PHP error handler, converts all errors into Error_Exceptions. This handler
 	 * respects error_reporting settings.
 	 *
-	 * @throws  Error_Exception
+	 * @param int         $code
+	 * @param string      $error
+	 * @param string|null $file
+	 * @param int|null    $line
+	 *
 	 * @return  TRUE
+	 *
+	 * @throws  Error_Exception
 	 */
 	public static function error_handler($code, $error, $file = NULL, $line = NULL)
 	{
@@ -994,6 +1025,7 @@ class KO7_Core {
 	 * Catches errors that are not caught by the error handler, such as E_PARSE.
 	 *
 	 * @uses    KO7_Exception::handler
+	 *
 	 * @return  void
 	 */
 	public static function shutdown_handler()
@@ -1044,8 +1076,10 @@ class KO7_Core {
 	/**
 	 * Call this within your function to mark it deprecated.
 	 *
-	 * @param string $since			Version since this function shall be marked deprecated.
-	 * @param string $replacement   [optional] replacement function to use instead
+	 * @param string $since       Version since this function shall be marked deprecated.
+	 * @param string $replacement [optional] replacement function name to use instead
+	 *
+	 * @return void
 	 */
 	public static function deprecated(string $since, string $replacement = '') : void
 	{

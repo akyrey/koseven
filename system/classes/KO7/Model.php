@@ -17,7 +17,8 @@ abstract class KO7_Model {
 	 *     $model = Model::factory($name);
 	 *
 	 * @param   string  $name   model name
-	 * @return  Model
+	 *
+	 * @return  static
 	 */
 	public static function factory($name)
 	{

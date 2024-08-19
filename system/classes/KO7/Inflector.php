@@ -15,17 +15,17 @@
 class KO7_Inflector {
 
 	/**
-	 * @var  array  cached inflections
+	 * @var  array<string, string>  cached inflections
 	 */
 	protected static $cache = [];
 
 	/**
-	 * @var  array  uncountable words
+	 * @var  array<string, string>  uncountable words
 	 */
 	protected static $uncountable;
 
 	/**
-	 * @var  array  irregular words
+	 * @var  array<string, string>  irregular words
 	 */
 	protected static $irregular;
 
@@ -41,6 +41,7 @@ class KO7_Inflector {
 	 * case, please report [an issue](http://koseven.dev/projects/KO7/issues).
 	 *
 	 * @param   string  $str    word to check
+	 *
 	 * @return  boolean
 	 */
 	public static function uncountable($str)
@@ -71,10 +72,12 @@ class KO7_Inflector {
 	 *
 	 * [!!] Special inflections are defined in `config/inflector.php`.
 	 *
-	 * @param   string  $str    word to make singular
-	 * @param   integer $count  count of thing
-	 * @return  string
 	 * @uses    Inflector::uncountable
+	 *
+	 * @param   string       $str   word to make singular
+	 * @param   integer|null $count count of thing
+	 *
+	 * @return  string
 	 */
 	public static function singular($str, $count = NULL)
 	{
@@ -145,10 +148,12 @@ class KO7_Inflector {
 	 *
 	 * [!!] Special inflections are defined in `config/inflector.php`.
 	 *
-	 * @param   string  $str    word to pluralize
-	 * @param   integer $count  count of thing
-	 * @return  string
 	 * @uses    Inflector::uncountable
+	 *
+	 * @param   string       $str    word to pluralize
+	 * @param   integer|null $count  count of thing
+	 *
+	 * @return  string
 	 */
 	public static function plural($str, $count = NULL)
 	{
@@ -219,6 +224,7 @@ class KO7_Inflector {
 	 *     $str = Inflector::camelize('kittens in bed'); // "kittensInBed"
 	 *
 	 * @param   string  $str    phrase to camelize
+	 *
 	 * @return  string
 	 */
 	public static function camelize($str)
@@ -237,6 +243,7 @@ class KO7_Inflector {
 	 *
 	 * @param   string  $str    phrase to camelize
 	 * @param   string  $sep    word separator
+	 *
 	 * @return  string
 	 */
 	public static function decamelize($str, $sep = ' ')
@@ -250,6 +257,7 @@ class KO7_Inflector {
 	 *     $str = Inflector::underscore('five cats'); // "five_cats";
 	 *
 	 * @param   string  $str    phrase to underscore
+	 *
 	 * @return  string
 	 */
 	public static function underscore($str)
@@ -264,6 +272,7 @@ class KO7_Inflector {
 	 *     $str = Inflector::humanize('dogs_as_well');     // "dogs as well"
 	 *
 	 * @param   string  $str    phrase to make human-readable
+	 *
 	 * @return  string
 	 */
 	public static function humanize($str)

@@ -31,7 +31,7 @@ class KO7_Fragment {
 	public static $i18n = FALSE;
 
 	/**
-	 * @var  array  list of buffer => cache key
+	 * @var  array<int, string>  list of buffer => cache key
 	 */
 	protected static $_caches = [];
 
@@ -40,11 +40,13 @@ class KO7_Fragment {
 	 *
 	 *     $key = Fragment::_cache_key('footer', TRUE);
 	 *
-	 * @param   string  $name   fragment name
-	 * @param   boolean $i18n   multilingual fragment support
-	 * @return  string
 	 * @uses    I18n::lang
 	 * @since   3.0.4
+	 *
+	 * @param   string       $name   fragment name
+	 * @param   boolean|null $i18n   multilingual fragment support
+	 *
+	 * @return  string
 	 */
 	protected static function _cache_key($name, $i18n = NULL)
 	{
@@ -70,9 +72,10 @@ class KO7_Fragment {
 	 *         Fragment::save();
 	 *     }
 	 *
-	 * @param   string  $name       fragment name
-	 * @param   integer $lifetime   fragment cache lifetime
-	 * @param   boolean $i18n       multilingual fragment support
+	 * @param   string       $name       fragment name
+	 * @param   integer|null $lifetime   fragment cache lifetime
+	 * @param   boolean|null $i18n       multilingual fragment support
+	 *
 	 * @return  boolean
 	 */
 	public static function load($name, $lifetime = NULL, $i18n = NULL)
@@ -135,8 +138,9 @@ class KO7_Fragment {
 	 *
 	 *     Fragment::delete($key);
 	 *
-	 * @param   string  $name   fragment name
-	 * @param   boolean $i18n   multilingual fragment support
+	 * @param   string       $name   fragment name
+	 * @param   boolean|null $i18n   multilingual fragment support
+	 *
 	 * @return  void
 	 */
 	public static function delete($name, $i18n = NULL)

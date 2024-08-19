@@ -20,7 +20,7 @@ class KO7_Profiler {
 	public static $rollover = 1000;
 
 	/**
-	 * @var  array  collected benchmarks
+	 * @var  array<string, array{group: string, name: string, start_time: int, start_memory: int, stop_time: int|bool, stop_memory: int|bool}>  collected benchmarks
 	 */
 	protected static $_marks = [];
 
@@ -32,6 +32,7 @@ class KO7_Profiler {
 	 *
 	 * @param   string  $group  group name
 	 * @param   string  $name   benchmark name
+	 *
 	 * @return  string
 	 */
 	public static function start($group, $name)
@@ -63,6 +64,7 @@ class KO7_Profiler {
 	 *     Profiler::stop($token);
 	 *
 	 * @param   string  $token
+	 *
 	 * @return  void
 	 */
 	public static function stop($token)
@@ -80,6 +82,7 @@ class KO7_Profiler {
 	 *     Profiler::delete($token);
 	 *
 	 * @param   string  $token
+	 *
 	 * @return  void
 	 */
 	public static function delete($token)
@@ -93,7 +96,7 @@ class KO7_Profiler {
 	 *
 	 *     $groups = Profiler::groups();
 	 *
-	 * @return  array
+	 * @return  array<string, array<string, string[]>> group.name.token
 	 */
 	public static function groups()
 	{
@@ -113,9 +116,11 @@ class KO7_Profiler {
 	 *
 	 *     $stats = Profiler::stats($tokens);
 	 *
-	 * @param   array   $tokens profiler tokens
-	 * @return  array   min, max, average, total
 	 * @uses    Profiler::total
+	 *
+	 * @param   string[]   $tokens profiler tokens
+	 *
+	 * @return  array{min: array{time: float|null, memory: int|null}, max: array{time: float|null, memory: int|null}, average: array{time: float, memory: int}, total: array{time: float, memory: int}}   min, max, average, total
 	 */
 	public static function stats(array $tokens)
 	{
@@ -185,10 +190,12 @@ class KO7_Profiler {
 	 *
 	 *     $stats = Profiler::group_stats('test');
 	 *
-	 * @param   mixed   $groups single group name string, or array with group names; all groups by default
-	 * @return  array   min, max, average, total
 	 * @uses    Profiler::groups
 	 * @uses    Profiler::stats
+	 *
+	 * @param   string|string[]|null   $groups single group name string, or array with group names; all groups by default
+	 *
+	 * @return  array<string, array{min: array{time: float|null, memory: int|null}, max: array{time: float|null, memory: int|null}, average: array{time: float, memory: int}, total: array{time: float, memory: int}}>   min, max, average, total
 	 */
 	public static function group_stats($groups = NULL)
 	{
@@ -272,7 +279,8 @@ class KO7_Profiler {
 	 *     list($time, $memory) = Profiler::total($token);
 	 *
 	 * @param   string  $token
-	 * @return  array   execution time, memory
+	 *
+	 * @return  array{float, int}   execution time, memory
 	 */
 	public static function total($token)
 	{
@@ -301,8 +309,9 @@ class KO7_Profiler {
 	 *
 	 *     list($time, $memory) = Profiler::application();
 	 *
-	 * @return  array  execution time, memory
 	 * @uses    KO7::cache
+	 *
+	 * @return  array{min: array{time: float|null, memory: int|null}, max: array{time: float|null, memory: int|null}, total: array{time: float, memory: int}, current: array{time: float, memory: int}, count: int}  execution time, memory
 	 */
 	public static function application()
 	{
